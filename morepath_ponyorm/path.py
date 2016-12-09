@@ -11,8 +11,7 @@ def get_root():
 @App.path(model=Document, path='documents/{id}',
           converters={'id': int})
 def get_document(request, id):
-    with request.db_session:
-        return Document[id]
+    return Document[id]
 
 
 @App.path(model=DocumentCollection, path='documents')
