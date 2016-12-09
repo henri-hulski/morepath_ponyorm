@@ -53,5 +53,4 @@ def document_collection_add_submit(self, request):
         title = request.POST.get('title')
         content = request.POST.get('content')
         document = self.add(title=title, content=content)
-        request.db_commit()
         return "<p>Awesome %s</p>" % document.id
