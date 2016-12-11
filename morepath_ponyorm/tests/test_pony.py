@@ -1,9 +1,10 @@
-import morepath
 from pony.orm import sql_debug
-import morepath_ponyorm
-from morepath_ponyorm import App
 from webtest import TestApp as Client
 
+import morepath
+
+import morepath_ponyorm
+from morepath_ponyorm import App
 from morepath_ponyorm.model import db
 
 
