@@ -1,12 +1,12 @@
-import logging
-
+from pymitter import EventEmitter
 from pony.orm import db_session, TransactionError
 
 import morepath
 
 
 class App(morepath.App):
-    pass
+
+    signal = EventEmitter()
 
 
 @App.setting_section(section='pony')
@@ -34,23 +34,31 @@ def pony_tween_factory(app, handler):
     def pony_tween(request):
         @request.after
         def after(response):
-            logging.warning('Here is the @request.after of pony_tween.')
+            app.signal.emit('pony_tween_after', '@request.after of pony_tween')
 
-        logging.warning('Here is the pony_tween.')
+        app.signal.emit('pony_tween', 'pony_tween')
         return handler(request)
 
-    logging.warning('Here is the pony_tween_factory.')
+    app.signal.emit('pony_tween_factory', 'pony_tween_factory')
     return pony_tween
+
 
 @App.tween_factory(over=pony_tween_factory)
 def side_effect_tween_factory(app, handler):
     def side_effect_tween(request):
         @request.after
         def after(response):
-            logging.warning('Here is the @request.after of side_effect_tween.')
+            app.signal.emit(
+                'side_effect_tween_after',
+                '@request.after of side_effect_tween'
+            )
 
-        logging.warning('Here is the side_effect_tween.')
+        app.signal.emit(
+            'side_effect_tween', 'side_effect_tween'
+        )
         return handler(request)
 
-    logging.warning('Here is the side_effect_tween_factory.')
+    app.signal.emit(
+        'side_effect_tween_factory', 'side_effect_tween_factory'
+    )
     return side_effect_tween
