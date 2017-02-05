@@ -59,4 +59,4 @@ def document_collection_add_submit(self, request):
         logging.warning('Here is the @request.after hook of the POST view.')
 
 
-    return "<p>Awesome %s</p>" % document.id
+    return "<p>Awesome!</p>"

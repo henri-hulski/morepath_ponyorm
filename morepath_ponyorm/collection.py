@@ -14,7 +14,6 @@ class DocumentCollection(object):
 
     def add(self, title, content):
         document = Document(title=title, content=content)
-        document.flush()
         return document
 
     def previous(self):
