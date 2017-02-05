@@ -1,3 +1,5 @@
+import logging
+
 from morepath import redirect
 
 from .app import App
@@ -50,4 +52,11 @@ def document_collection_add_submit(self, request):
     title = request.POST.get('title')
     content = request.POST.get('content')
     document = self.add(title=title, content=content)
+    logging.warning('Here is the regular POST view.')
+
+    @request.after
+    def after(response):
+        logging.warning('Here is the @request.after hook of the POST view.')
+
+
     return "<p>Awesome %s</p>" % document.id
