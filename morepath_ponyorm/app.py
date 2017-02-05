@@ -1,3 +1,5 @@
+import logging
+
 from pony.orm import db_session, TransactionError
 
 import morepath
@@ -21,7 +23,6 @@ def get_pony_settings():
 
 @App.tween_factory(over=morepath.EXCVIEW)
 def pony_tween_factory(app, handler):
-
     @db_session(
         allowed_exceptions=app.settings.pony.allowed_exceptions,
         immediate=app.settings.pony.immediate,
@@ -31,6 +32,25 @@ def pony_tween_factory(app, handler):
         strict=app.settings.pony.strict
     )
     def pony_tween(request):
+        @request.after
+        def after(response):
+            logging.warning('Here is the @request.after of pony_tween.')
+
+        logging.warning('Here is the pony_tween.')
         return handler(request)
 
+    logging.warning('Here is the pony_tween_factory.')
     return pony_tween
+
+@App.tween_factory(over=pony_tween_factory)
+def side_effect_tween_factory(app, handler):
+    def side_effect_tween(request):
+        @request.after
+        def after(response):
+            logging.warning('Here is the @request.after of side_effect_tween.')
+
+        logging.warning('Here is the side_effect_tween.')
+        return handler(request)
+
+    logging.warning('Here is the side_effect_tween_factory.')
+    return side_effect_tween
